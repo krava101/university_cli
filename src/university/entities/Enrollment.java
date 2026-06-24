@@ -1,34 +1,33 @@
 package university.entities;
 
 import university.enums.Grade;
+import university.interfaces.Payable;
 
-public class Enrollment {
+public class Enrollment implements Payable {
     private Student student;
     private Course course;
+    private String semester;
     private Grade grade;
     private boolean paid;
 
-    public Enrollment(Student student, Course course, Grade grade, boolean paid) {
+    public Enrollment(Student student, Course course, String semester) {
         this.student = student;
         this.course = course;
-        this.grade = grade;
-        this.paid = paid;
+        this.semester = semester;
+        this.grade = Grade.NA;
+        this.paid = false;
     }
 
     public Student getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
     public Course getCourse() {
         return course;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public String getSemester() {
+        return semester;
     }
 
     public Grade getGrade() {
@@ -39,21 +38,13 @@ public class Enrollment {
         this.grade = grade;
     }
 
+    @Override
     public boolean isPaid() {
         return paid;
     }
 
-    public void setPaid(boolean paid) {
-        this.paid = paid;
-    }
-
     @Override
-    public String toString() {
-        return "Enrollment{" +
-                "student=" + student.getName() +
-                ", course=" + course.getName() +
-                ", grade=" + grade +
-                ", paid=" + paid +
-                '}';
+    public void markAsPaid() {
+        this.paid = true;
     }
 }
