@@ -8,6 +8,11 @@ import java.util.List;
 
 public class TeacherService {
     private final List<Teacher> teachers = new ArrayList<>();
+    //проста імітація генерації id
+    private int nextTeacherId = 1;
+    public int generateTeacherId() {
+        return nextTeacherId++;
+    }
 
     public List<Teacher> getAllTeachers(){
         return teachers;
@@ -47,5 +52,16 @@ public class TeacherService {
 
         teachers.remove(teacher);
         return true;
+    }
+
+    public void printTeachers(List<Teacher> teachersToPrint) {
+        if (teachersToPrint.isEmpty()) {
+            System.out.println("No teachers found.");
+            return;
+        }
+
+        for (Teacher teacher : teachersToPrint) {
+            System.out.println(teacher);
+        }
     }
 }

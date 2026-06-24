@@ -9,6 +9,12 @@ import java.util.List;
 public class CourseService {
     private final List<Course> courses = new ArrayList<>();
 
+    private int nextCourseId = 1;
+
+    public int generateCourseId() {
+        return nextCourseId++;
+    }
+
     public List<Course> getAllCourses(){
         return courses;
     }

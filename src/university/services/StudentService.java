@@ -8,6 +8,11 @@ import java.util.List;
 
 public class StudentService {
     private final List<Student> students = new ArrayList<>();
+    //проста імітація генерації id
+    private int nextStudentId = 1;
+    public int generateStudentId() {
+        return nextStudentId++;
+    }
 
     public List<Student> getAllStudents(){
         return students;
@@ -120,6 +125,17 @@ public class StudentService {
         }
 
         return result;
+    }
+
+    public void printStudents(List<Student> studentsToPrint) {
+        if (studentsToPrint.isEmpty()) {
+            System.out.println("No students found.");
+            return;
+        }
+
+        for (Student student : studentsToPrint) {
+            System.out.println(student);
+        }
     }
 
 
