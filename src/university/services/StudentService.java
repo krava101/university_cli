@@ -106,5 +106,21 @@ public class StudentService {
         return sortedStudents;
     }
 
+    public List<Student> searchStudents(String q) {
+        List<Student> result = new ArrayList<>();
+        String query = q.toLowerCase();
+
+        for (Student student : students) {
+            String studentName = student.getName().toLowerCase();
+            String studentEmail = student.getEmail().toLowerCase();
+
+            if (studentName.contains(query) || studentEmail.contains(query)) {
+                result.add(student);
+            }
+        }
+
+        return result;
+    }
+
 
 }
