@@ -50,4 +50,16 @@ public class CourseService {
         courses.remove(course);
         return true;
     }
+
+    public List<Course> filterByCredits(int credits) {
+        List<Course> result = new ArrayList<>();
+
+        for (Course course : courses) {
+            if (course.getCredits() == credits) {
+                result.add(course);
+            }
+        }
+
+        return result;
+    }
 }

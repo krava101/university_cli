@@ -26,7 +26,7 @@ public class StudentService {
         return null;
     }
 
-    public boolean updateStudent(int id, String name, String email, String group, int studyYear, StudentStatus status) {
+    public boolean updateStudent(int id, String name, String email, String group, int studyYear) {
         Student student = getStudentById(id);
 
         if (student == null) {
@@ -37,8 +37,18 @@ public class StudentService {
         student.setEmail(email);
         student.setGroup(group);
         student.setStudyYear(studyYear);
-        student.setStatus(status);
 
+        return true;
+    }
+
+    public boolean changeStudentStatus(int id, StudentStatus status) {
+        Student student = getStudentById(id);
+
+        if (student == null) {
+            return false;
+        }
+
+        student.setStatus(status);
         return true;
     }
 
@@ -52,4 +62,49 @@ public class StudentService {
         students.remove(student);
         return true;
     }
+
+    public List<Student> filterByStatus(StudentStatus status) {
+        List<Student> result = new ArrayList<>();
+
+        for (Student student : students) {
+            if (student.getStatus() == status) {
+                result.add(student);
+            }
+        }
+
+        return result;
+    }
+
+    public List<Student> filterByStudyYear(int studyYear) {
+        List<Student> result = new ArrayList<>();
+
+        for (Student student : students) {
+            if (student.getStudyYear() == studyYear) {
+                result.add(student);
+            }
+        }
+
+        return result;
+    }
+
+    public List<Student> sortByName() {
+        List<Student> sortedStudents = new ArrayList<>(students);
+
+        for (int i = 0; i < sortedStudents.size() - 1; i++) {
+            for (int j = 0; j < sortedStudents.size() - i - 1; j++) {
+                String firstName = sortedStudents.get(j).getName();
+                String secondName = sortedStudents.get(j + 1).getName();
+
+                if (firstName.compareToIgnoreCase(secondName) > 0) {
+                    Student temp = sortedStudents.get(j);
+                    sortedStudents.set(j, sortedStudents.get(j + 1));
+                    sortedStudents.set(j + 1, temp);
+                }
+            }
+        }
+
+        return sortedStudents;
+    }
+
+
 }
