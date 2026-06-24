@@ -14,6 +14,10 @@ public class EnrollmentService {
 
     private final StudentService studentService;
     private final CourseService courseService;
+    private int nextEnrollmentId = 1;
+    public int generateEnrollmentId() {
+        return nextEnrollmentId++;
+    }
 
     public EnrollmentService(StudentService studentService, CourseService courseService) {
         this.studentService = studentService;
@@ -24,33 +28,23 @@ public class EnrollmentService {
         return enrollments;
     }
 
-    public boolean createEnrollment(int studentId, int courseId, String semester) {
+    public Enrollment createEnrollment(int studentId, int courseId, String semester) {
         Student student = studentService.getStudentById(studentId);
         Course course = courseService.getCourseById(courseId);
 
         if (student == null || course == null) {
-            return false;
+            return null;
         }
 
-        Enrollment existingEnrollment = getEnrollment(studentId, courseId, semester);
-
-        if (existingEnrollment != null) {
-            return false;
-        }
-
-        Enrollment enrollment = new Enrollment(student, course, semester);
+        Enrollment enrollment = new Enrollment(generateEnrollmentId(), student, course, semester);
         enrollments.add(enrollment);
 
-        return true;
+        return enrollment;
     }
 
-    public Enrollment getEnrollment(int studentId, int courseId, String semester) {
+    public Enrollment getEnrollment(int enrollmentId) {
         for (Enrollment enrollment : enrollments) {
-            boolean sameStudent = enrollment.getStudent().getId() == studentId;
-            boolean sameCourse = enrollment.getCourse().getId() == courseId;
-            boolean sameSemester = enrollment.getSemester().equalsIgnoreCase(semester);
-
-            if (sameStudent && sameCourse && sameSemester) {
+            if (enrollmentId == enrollment.getId()) {
                 return enrollment;
             }
         }
@@ -58,8 +52,8 @@ public class EnrollmentService {
         return null;
     }
 
-    public boolean setGrade(int studentId, int courseId, String semester, Grade grade) {
-        Enrollment enrollment = getEnrollment(studentId, courseId, semester);
+    public boolean setGrade(int enrollmentId, Grade grade) {
+        Enrollment enrollment = getEnrollment(enrollmentId);
 
         if (enrollment == null) {
             return false;
@@ -69,8 +63,8 @@ public class EnrollmentService {
         return true;
     }
 
-    public boolean setGradeByScore(int studentId, int courseId, String semester, int score) {
-        Enrollment enrollment = getEnrollment(studentId, courseId, semester);
+    public boolean setGradeByScore(int enrollmentId, int score) {
+        Enrollment enrollment = getEnrollment(enrollmentId);
 
         if (enrollment == null) {
             return false;
@@ -82,8 +76,8 @@ public class EnrollmentService {
         return true;
     }
 
-    public boolean markPaymentAsPaid(int studentId, int courseId, String semester) {
-        Enrollment enrollment = getEnrollment(studentId, courseId, semester);
+    public boolean markPaymentAsPaid(int enrollmentId) {
+        Enrollment enrollment = getEnrollment(enrollmentId);
 
         if (enrollment == null) {
             return false;
@@ -152,8 +146,8 @@ public class EnrollmentService {
         System.out.println("==========================================");
     }
 
-    public boolean deleteEnrollment(int studentId, int courseId, String semester) {
-        Enrollment enrollment = getEnrollment(studentId, courseId, semester);
+    public boolean deleteEnrollment(int enrollmentId) {
+        Enrollment enrollment = getEnrollment(enrollmentId);
 
         if (enrollment == null) {
             return false;
@@ -169,31 +163,6 @@ public class EnrollmentService {
         for (Enrollment enrollment : enrollments) {
             if (!enrollment.isPaid()) {
                 result.add(enrollment);
-            }
-        }
-
-        return result;
-    }
-
-    public List<Student> getStudentsWithUnpaidCourses() {
-        List<Student> result = new ArrayList<>();
-
-        for (Enrollment enrollment : enrollments) {
-            if (!enrollment.isPaid()) {
-                Student student = enrollment.getStudent();
-
-                boolean alreadyAdded = false;
-
-                for (Student existingStudent : result) {
-                    if (existingStudent.getId() == student.getId()) {
-                        alreadyAdded = true;
-                        break;
-                    }
-                }
-
-                if (!alreadyAdded) {
-                    result.add(student);
-                }
             }
         }
 
@@ -252,5 +221,16 @@ public class EnrollmentService {
         }
 
         return result;
+    }
+
+    public void printEnrollments(List<Enrollment> toPrint) {
+        if (toPrint.isEmpty()) {
+            System.out.println("Зарахувань не знайдено.");
+            return;
+        }
+
+        for (Enrollment enrollment : toPrint) {
+            System.out.println(enrollment);
+        }
     }
 }

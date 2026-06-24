@@ -4,19 +4,22 @@ import university.enums.Grade;
 import university.interfaces.Payable;
 
 public class Enrollment implements Payable {
-    private Student student;
-    private Course course;
-    private String semester;
+    private final int id;
+    private final Student student;
+    private final Course course;
+    private final String semester;
     private Grade grade;
     private boolean paid;
 
-    public Enrollment(Student student, Course course, String semester) {
+    public Enrollment(int id, Student student, Course course, String semester) {
+        this.id = id;
         this.student = student;
         this.course = course;
         this.semester = semester;
         this.grade = Grade.NA;
         this.paid = false;
     }
+    public int getId() {return id;}
 
     public Student getStudent() {
         return student;
@@ -46,5 +49,20 @@ public class Enrollment implements Payable {
     @Override
     public void markAsPaid() {
         this.paid = true;
+    }
+
+    @Override
+    public String toString() {
+        return "Enrollment{" +
+                "id=" + id +
+                "studentId=" + student.getId() +
+                ", studentName='" + student.getName() + '\'' +
+                ", courseId=" + course.getId() +
+                ", courseName='" + course.getName() + '\'' +
+                ", semester='" + semester + '\'' +
+                ", grade=" + grade +
+                ", gpaValue=" + grade.getGpaValue() +
+                ", paid=" + paid +
+                '}';
     }
 }
