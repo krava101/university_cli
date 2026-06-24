@@ -68,4 +68,13 @@ public class CourseService {
 
         return result;
     }
+
+    public void printCourses(List<Course> coursesToPrint){
+        if(coursesToPrint.isEmpty()){
+            System.out.println("Courses not found!");
+        }
+        for(Course course: coursesToPrint){
+            System.out.println(course);
+        }
+    }
 }

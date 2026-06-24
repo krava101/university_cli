@@ -32,7 +32,7 @@ public class MainMenu {
 
         studentMenu = new StudentMenu(scanner, studentService);
         teacherMenu = new TeacherMenu(scanner, teacherService);
-        courseMenu = new CourseMenu();//scanner, courseService, teacherService);
+        courseMenu = new CourseMenu(scanner, courseService, teacherService);
         enrollmentMenu = new EnrollmentMenu();//scanner, enrollmentService);
         reportsMenu = new ReportsMenu();//scanner, studentService, enrollmentService);
     }
@@ -53,7 +53,7 @@ public class MainMenu {
                     teacherMenu.show();
                     break;
                 case 3:
-                    //courseMenu.show();
+                    courseMenu.show();
                     break;
                 case 4:
                     //enrollmentMenu.show();
