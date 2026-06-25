@@ -2,6 +2,7 @@ package university.services;
 
 import university.entities.Student;
 import university.enums.StudentStatus;
+import university.util.ValidationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,11 @@ public class StudentService {
     }
 
     public void addStudent(Student student) {
+        ValidationUtils.validateName(student.getName());
+        ValidationUtils.validateEmail(student.getEmail());
+        ValidationUtils.validateStudyYear(student.getStudyYear());
+        ValidationUtils.validateGroup(student.getGroup());
+
         students.add(student);
     }
 
@@ -32,6 +38,11 @@ public class StudentService {
     }
 
     public boolean updateStudent(int id, String name, String email, String group, int studyYear) {
+        ValidationUtils.validateName(name);
+        ValidationUtils.validateEmail(email);
+        ValidationUtils.validateStudyYear(studyYear);
+        ValidationUtils.validateGroup(group);
+
         Student student = getStudentById(id);
 
         if (student == null) {
@@ -81,6 +92,8 @@ public class StudentService {
     }
 
     public List<Student> filterByStudyYear(int studyYear) {
+        ValidationUtils.validateStudyYear(studyYear);
+
         List<Student> result = new ArrayList<>();
 
         for (Student student : students) {
@@ -111,15 +124,20 @@ public class StudentService {
         return sortedStudents;
     }
 
-    public List<Student> searchStudents(String q) {
+    public List<Student> searchStudents(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            throw new IllegalArgumentException("Пошуковий запит не може бути порожнім.");
+        }
+
         List<Student> result = new ArrayList<>();
-        String query = q.toLowerCase();
+
+        String normalizedQuery = query.toLowerCase();
 
         for (Student student : students) {
-            String studentName = student.getName().toLowerCase();
-            String studentEmail = student.getEmail().toLowerCase();
+            String name = student.getName().toLowerCase();
+            String email = student.getEmail().toLowerCase();
 
-            if (studentName.contains(query) || studentEmail.contains(query)) {
+            if (name.contains(normalizedQuery) || email.contains(normalizedQuery)) {
                 result.add(student);
             }
         }

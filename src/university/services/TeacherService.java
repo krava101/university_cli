@@ -2,6 +2,7 @@ package university.services;
 
 import university.entities.Teacher;
 import university.enums.TeacherPosition;
+import university.util.ValidationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,9 @@ public class TeacherService {
     }
 
     public void addTeacher(Teacher teacher){
+        ValidationUtils.validateName(teacher.getName());
+        ValidationUtils.validateEmail(teacher.getEmail());
+
         teachers.add(teacher);
     }
 
@@ -32,6 +36,9 @@ public class TeacherService {
     }
 
     public boolean updateTeacher(int id, String name, String email, String department, TeacherPosition position){
+        ValidationUtils.validateName(name);
+        ValidationUtils.validateEmail(email);
+
         Teacher teacher = getTeacherById(id);
         if(teacher == null){
             return false;

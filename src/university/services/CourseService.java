@@ -2,6 +2,7 @@ package university.services;
 
 import university.entities.Course;
 import university.entities.Teacher;
+import university.util.ValidationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,9 @@ public class CourseService {
     }
 
     public void addCourse(Course course){
+        ValidationUtils.validateName(course.getName());
+        ValidationUtils.validateCredits(course.getCredits());
+
         courses.add(course);
     }
 
@@ -33,6 +37,9 @@ public class CourseService {
     }
 
     public boolean updateCourse(int id, String name, int credits, Teacher teacher){
+        ValidationUtils.validateName(name);
+        ValidationUtils.validateCredits(credits);
+
         Course course = getCourseById(id);
 
         if(course == null){

@@ -5,6 +5,7 @@ import university.entities.Enrollment;
 import university.entities.Student;
 import university.enums.Grade;
 import university.util.GPAUtils;
+import university.util.ValidationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ public class EnrollmentService {
     }
 
     public Enrollment createEnrollment(int studentId, int courseId, String semester) {
+        ValidationUtils.validateSemester(semester);
+
         Student student = studentService.getStudentById(studentId);
         Course course = courseService.getCourseById(courseId);
 
@@ -50,6 +53,19 @@ public class EnrollmentService {
         }
 
         return null;
+    }
+
+    public boolean updateEnrollment(int enrollmentId, Grade grade, boolean paid) {
+        Enrollment enrollment = getEnrollment(enrollmentId);
+
+        if (enrollment == null) {
+            return false;
+        }
+
+        enrollment.setGrade(grade);
+        enrollment.setPaid(paid);
+
+        return true;
     }
 
     public boolean setGrade(int enrollmentId, Grade grade) {
@@ -108,35 +124,35 @@ public class EnrollmentService {
         Student student = studentService.getStudentById(studentId);
 
         if (student == null) {
-            System.out.println("Student not found.");
+            System.out.println("Студента не знайдено.");
             return;
         }
 
         List<Enrollment> studentEnrollments = getEnrollmentsByStudentId(studentId);
 
         System.out.println("==========================================");
-        System.out.println("STUDENT TRANSCRIPT");
-        System.out.println("Student ID: " + student.getId());
-        System.out.println("Name: " + student.getName());
+        System.out.println("ТРАНСКРИПТ СТУДЕНТА");
+        System.out.println("ID студента: " + student.getId());
+        System.out.println("ПІБ: " + student.getName());
         System.out.println("Email: " + student.getEmail());
-        System.out.println("Group: " + student.getGroup());
-        System.out.println("Study year: " + student.getStudyYear());
-        System.out.println("Status: " + student.getStatus());
+        System.out.println("Група: " + student.getGroup());
+        System.out.println("Рік навчання: " + student.getStudyYear());
+        System.out.println("Статус: " + student.getStatus());
         System.out.println("------------------------------------------");
 
         if (studentEnrollments.isEmpty()) {
-            System.out.println("No enrollments found.");
+            System.out.println("Зарахувань не знайдено.");
         } else {
             for (Enrollment enrollment : studentEnrollments) {
                 Course course = enrollment.getCourse();
 
-                System.out.println("Course: " + course.getName());
-                System.out.println("Credits: " + course.getCredits());
-                System.out.println("Teacher: " + course.getTeacher().getName());
-                System.out.println("Semester: " + enrollment.getSemester());
-                System.out.println("Grade: " + enrollment.getGrade());
-                System.out.println("GPA value: " + enrollment.getGrade().getGpaValue());
-                System.out.println("Paid: " + enrollment.isPaid());
+                System.out.println("Курс: " + course.getName());
+                System.out.println("Кредити: " + course.getCredits());
+                System.out.println("Викладач: " + course.getTeacher().getName());
+                System.out.println("Семестр: " + enrollment.getSemester());
+                System.out.println("Оцінка: " + enrollment.getGrade());
+                System.out.println("GPA значення: " + enrollment.getGrade().getGpaValue());
+                System.out.println("Оплачено: " + enrollment.isPaid());
                 System.out.println("------------------------------------------");
             }
 
@@ -170,6 +186,8 @@ public class EnrollmentService {
     }
 
     public double calcAvgGPAByCourseAndSemester(int courseId, String semester) {
+        ValidationUtils.validateSemester(semester);
+
         double total = 0;
         int count = 0;
 
@@ -192,6 +210,10 @@ public class EnrollmentService {
     }
 
     public Student[] getTopStudentsByGPA(int limit) {
+        if (limit < 1) {
+            throw new IllegalArgumentException("Кількість студентів для топу має бути більше або дорівнювати 1.");
+        }
+
         List<Student> allStudents = studentService.getAllStudents();
 
         Student[] studentsArray = new Student[allStudents.size()];

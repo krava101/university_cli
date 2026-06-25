@@ -75,40 +75,47 @@ public class StudentMenu {
     }
 
     private void addStudent() {
-        int id = studentService.generateStudentId();
-        String name = InputUtils.readString(scanner, "Введіть повне ім'я: ");
-        String email = InputUtils.readString(scanner,"Введіть email: ");
-        String group = InputUtils.readString(scanner,"Введіть групу: ");
-        int studyYear = InputUtils.readInt(scanner,"Введіть рік навчання: ");
-        StudentStatus status = readStudentStatus();
+        try {
+            int id = studentService.generateStudentId();
+            String name = InputUtils.readString(scanner, "Введіть повне ім'я: ");
+            String email = InputUtils.readString(scanner,"Введіть email: ");
+            String group = InputUtils.readString(scanner,"Введіть групу: ");
+            int studyYear = InputUtils.readInt(scanner,"Введіть рік навчання: ");
+            StudentStatus status = readStudentStatus();
 
-        Student student = new Student(id, name, email, group, studyYear, status);
-        studentService.addStudent(student);
-
-        System.out.println("Студента додано!");
+            Student student = new Student(id, name, email, group, studyYear, status);
+            studentService.addStudent(student);
+            System.out.println("Студента додано!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Виникла помилка: " + e.getMessage());
+        }
     }
 
     private void updateStudent() {
-        int id = InputUtils.readInt(scanner,"Введіть ID студента інформацію про якого ви хочете змінити: ");
+        try{
+            int id = InputUtils.readInt(scanner, "Введіть ID студента інформацію про якого ви хочете змінити: ");
 
-        Student existingStudent = studentService.getStudentById(id);
+            Student existingStudent = studentService.getStudentById(id);
 
-        if (existingStudent == null) {
-            System.out.printf("Студента з ID: %d не знайдено!", id);
-            return;
-        }
+            if (existingStudent == null) {
+                System.out.printf("Студента з ID: %d не знайдено!", id);
+                return;
+            }
 
-        String name = InputUtils.readString(scanner,"Введіть нове повне ім'я: ");
-        String email = InputUtils.readString(scanner, "Введіть новий email: ");
-        String group = InputUtils.readString(scanner,"Введіть нову групу: ");
-        int studyYear = InputUtils.readInt(scanner,"Введіть новий рік навчання: ");
+            String name = InputUtils.readString(scanner, "Введіть нове повне ім'я: ");
+            String email = InputUtils.readString(scanner, "Введіть новий email: ");
+            String group = InputUtils.readString(scanner, "Введіть нову групу: ");
+            int studyYear = InputUtils.readInt(scanner, "Введіть новий рік навчання: ");
 
-        boolean updated = studentService.updateStudent(id, name, email, group, studyYear);
+            boolean updated = studentService.updateStudent(id, name, email, group, studyYear);
 
-        if (updated) {
-            System.out.println("Інформацію успішно оновлено!");
-        } else {
-            System.out.println("Невдалось оновити інформацію!");
+            if (updated) {
+                System.out.println("Інформацію успішно оновлено!");
+            } else {
+                System.out.println("Невдалось оновити інформацію!");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Виникла помилка: " + e.getMessage());
         }
     }
 
@@ -151,14 +158,23 @@ public class StudentMenu {
     }
 
     private void filterByStudyYear() {
-        int studyYear = InputUtils.readInt(scanner,"Введіть рік навчання: ");
-        studentService.printStudents(studentService.filterByStudyYear(studyYear));
+        try {
+            int studyYear = InputUtils.readInt(scanner, "Введіть рік навчання: ");
+            studentService.printStudents(studentService.filterByStudyYear(studyYear));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка: " + e.getMessage());
+        }
     }
 
     private void searchStudents() {
-        String query = InputUtils.readString(scanner,"Введіть частину ім'я або пошти: ");
-        List<Student> students = studentService.searchStudents(query);
-        studentService.printStudents(students);
+        try {
+            String query = InputUtils.readString(scanner, "Введіть частину ПІБ або email: ");
+
+            List<Student> students = studentService.searchStudents(query);
+            studentService.printStudents(students);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка: " + e.getMessage());
+        }
     }
 
     private StudentStatus readStudentStatus() {

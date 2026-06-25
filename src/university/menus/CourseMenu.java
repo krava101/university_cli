@@ -65,50 +65,58 @@ public class CourseMenu {
     }
 
     private void addCourse() {
-        int id = courseService.generateCourseId();
+        try {
+            int id = courseService.generateCourseId();
 
-        String name = InputUtils.readString(scanner, "Введіть назву курсу: ");
-        int credits = InputUtils.readInt(scanner, "Введіть кількість кредитів: ");
+            String name = InputUtils.readString(scanner, "Введіть назву курсу: ");
+            int credits = InputUtils.readInt(scanner, "Введіть кількість кредитів: ");
 
-        Teacher teacher = chooseTeacher();
+            Teacher teacher = chooseTeacher();
 
-        if (teacher == null) {
-            System.out.println("Невдалось створити курс, оскільки викладача не знайдено.");
-            return;
+            if (teacher == null) {
+                System.out.println("Невдалось створити курс, оскільки викладача не знайдено.");
+                return;
+            }
+
+            Course course = new Course(id, name, credits, teacher);
+            courseService.addCourse(course);
+
+            System.out.printf("Курс з ID: %d успішно додано.%n", id);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка: " + e.getMessage());
         }
-
-        Course course = new Course(id, name, credits, teacher);
-        courseService.addCourse(course);
-
-        System.out.println("Курс успішно додано.");
     }
 
     private void updateCourse() {
-        int id = InputUtils.readInt(scanner, "Введіть ID курсу для оновлення: ");
+        try {
+            int id = InputUtils.readInt(scanner, "Введіть ID курсу для оновлення: ");
 
-        Course existingCourse = courseService.getCourseById(id);
+            Course existingCourse = courseService.getCourseById(id);
 
-        if (existingCourse == null) {
-            System.out.printf("Курс з ID: %d не знайдено.", id);
-            return;
-        }
+            if (existingCourse == null) {
+                System.out.printf("Курс з ID: %d не знайдено.%n", id);
+                return;
+            }
 
-        String name = InputUtils.readString(scanner, "Введіть нову назву курсу: ");
-        int credits = InputUtils.readInt(scanner, "Введіть нову кількість кредитів: ");
+            String name = InputUtils.readString(scanner, "Введіть нову назву курсу: ");
+            int credits = InputUtils.readInt(scanner, "Введіть нову кількість кредитів: ");
 
-        Teacher teacher = chooseTeacher();
+            Teacher teacher = chooseTeacher();
 
-        if (teacher == null) {
-            System.out.println("Дані курсу не оновлено, оскільки викладача не знайдено.");
-            return;
-        }
+            if (teacher == null) {
+                System.out.println("Дані курсу не оновлено, оскільки викладача не знайдено.");
+                return;
+            }
 
-        boolean updated = courseService.updateCourse(id, name, credits, teacher);
+            boolean updated = courseService.updateCourse(id, name, credits, teacher);
 
-        if (updated) {
-            System.out.println("Дані курсу успішно оновлено.");
-        } else {
-            System.out.println("Невдалось оновити дані курсу!");
+            if (updated) {
+                System.out.println("Дані курсу успішно оновлено.");
+            } else {
+                System.out.println("Невдалось оновити дані курсу.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка: " + e.getMessage());
         }
     }
 
@@ -125,8 +133,12 @@ public class CourseMenu {
     }
 
     private void filterByCredits() {
-        int credits = InputUtils.readInt(scanner, "Введіть кількість кредитів: ");
-        courseService.printCourses(courseService.filterByCredits(credits));
+        try {
+            int credits = InputUtils.readInt(scanner, "Введіть кількість кредитів: ");
+            courseService.printCourses(courseService.filterByCredits(credits));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка: " + e.getMessage());
+        }
     }
 
     private Teacher chooseTeacher() {

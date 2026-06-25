@@ -57,40 +57,48 @@ public class TeacherMenu {
     }
 
     private void addTeacher() {
-        int id = teacherService.generateTeacherId();
+        try {
+            int id = teacherService.generateTeacherId();
 
-        String name = InputUtils.readString(scanner, "Введіть ПІБ викладача: ");
-        String email = InputUtils.readString(scanner, "Введіть email: ");
-        String department = InputUtils.readString(scanner, "Введіть кафедру: ");
-        TeacherPosition position = readTeacherPosition();
+            String name = InputUtils.readString(scanner, "Введіть ПІБ викладача: ");
+            String email = InputUtils.readString(scanner, "Введіть email: ");
+            String department = InputUtils.readString(scanner, "Введіть кафедру: ");
+            TeacherPosition position = readTeacherPosition();
 
-        Teacher teacher = new Teacher(id, name, email, department, position);
-        teacherService.addTeacher(teacher);
+            Teacher teacher = new Teacher(id, name, email, department, position);
+            teacherService.addTeacher(teacher);
 
-        System.out.printf("Викладача з ID: %d додано успішно. ID: ", id);
+            System.out.printf("Викладача з ID: %d додано успішно.", id);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка: " + e.getMessage());
+        }
     }
 
     private void updateTeacher() {
-        int id = InputUtils.readInt(scanner, "Введіть ID викладача для оновлення: ");
+        try {
+            int id = InputUtils.readInt(scanner, "Введіть ID викладача для оновлення: ");
 
-        Teacher existingTeacher = teacherService.getTeacherById(id);
+            Teacher existingTeacher = teacherService.getTeacherById(id);
 
-        if (existingTeacher == null) {
-            System.out.println("Викладача не знайдено.");
-            return;
-        }
+            if (existingTeacher == null) {
+                System.out.println("Викладача не знайдено.");
+                return;
+            }
 
-        String name = InputUtils.readString(scanner, "Введіть новий ПІБ: ");
-        String email = InputUtils.readString(scanner, "Введіть новий email: ");
-        String department = InputUtils.readString(scanner, "Введіть нову кафедру: ");
-        TeacherPosition position = readTeacherPosition();
+            String name = InputUtils.readString(scanner, "Введіть новий ПІБ: ");
+            String email = InputUtils.readString(scanner, "Введіть новий email: ");
+            String department = InputUtils.readString(scanner, "Введіть нову кафедру: ");
+            TeacherPosition position = readTeacherPosition();
 
-        boolean updated = teacherService.updateTeacher(id, name, email, department, position);
+            boolean updated = teacherService.updateTeacher(id, name, email, department, position);
 
-        if (updated) {
-            System.out.println("Дані викладача успішно оновлено.");
-        } else {
-            System.out.println("Невдалось оновити дані викладача.");
+            if (updated) {
+                System.out.println("Дані викладача успішно оновлено.");
+            } else {
+                System.out.println("Невдалось оновити дані викладача.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Помилка: " + e.getMessage());
         }
     }
 

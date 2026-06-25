@@ -37,6 +37,10 @@ public class Enrollment implements Payable {
         return grade;
     }
 
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
     public void setGrade(Grade grade) {
         this.grade = grade;
     }

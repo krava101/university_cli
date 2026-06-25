@@ -20,7 +20,7 @@ public class MainMenu {
     private final TeacherMenu teacherMenu;
     private final CourseMenu courseMenu;
     private final EnrollmentMenu enrollmentMenu;
-    private final ReportsMenu reportsMenu;
+    private final ReportMenu reportMenu ;
 
     public MainMenu() {
         scanner = new Scanner(System.in);
@@ -29,12 +29,12 @@ public class MainMenu {
         teacherService = new TeacherService();
         courseService = new CourseService();
         enrollmentService = new EnrollmentService(studentService, courseService);
+        reportMenu = new ReportMenu(scanner, studentService, enrollmentService);
 
         studentMenu = new StudentMenu(scanner, studentService);
         teacherMenu = new TeacherMenu(scanner, teacherService);
         courseMenu = new CourseMenu(scanner, courseService, teacherService);
         enrollmentMenu = new EnrollmentMenu(scanner, enrollmentService, studentService, courseService);
-        reportsMenu = new ReportsMenu();//scanner, studentService, enrollmentService);
     }
 
     public void show() {
@@ -59,7 +59,7 @@ public class MainMenu {
                     enrollmentMenu.show();
                     break;
                 case 5:
-                    //reportsMenu.show();
+                    reportMenu.show();
                     break;
                 case 0:
                     running = false;
